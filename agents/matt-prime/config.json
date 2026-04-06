@@ -1,0 +1,13 @@
+{
+  "name": "matt-prime",
+  "role": "Main coordinator and execution agent",
+  "soul": "agents/matt-prime/soul.md",
+  "protocols": [
+    "docs/protocols/flywheel.md",
+    "docs/protocols/memory.md"
+  ],
+  "memory": {
+    "todo": "TODO.md",
+    "updates": "updates.json"
+  }
+}
