@@ -1,0 +1,14 @@
+{
+  "name": "competitive",
+  "role": "Weekly competitor sweep of F45, OrangeTheory, Solidcore, and Barry's",
+  "soul": "agents/competitive/soul.md",
+  "protocols": [
+    "docs/protocols/flywheel.md",
+    "docs/protocols/memory.md"
+  ],
+  "brand": "docs/brand/sweat440-brand-law.md",
+  "memory": {
+    "todo": "TODO.md",
+    "updates": "updates.json"
+  }
+}

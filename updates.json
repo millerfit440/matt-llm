@@ -18,6 +18,18 @@
         "agents/matt-prime/soul.md",
         "agents/matt-prime/config.json"
       ]
+    },
+    {
+      "date": "2026-05-24",
+      "type": "task",
+      "summary": "Added SWEAT440 brand law document and competitive intelligence agent. Brand law covers name formatting, forbidden words, positioning anchor, typography, and color palette. Competitive agent is scoped to weekly sweeps of F45, OrangeTheory, Solidcore, and Barry's, producing internal-only decision-ready briefs.",
+      "files_changed": [
+        "docs/brand/sweat440-brand-law.md",
+        "agents/competitive/config.json",
+        "agents/competitive/soul.md",
+        "TODO.md",
+        "updates.json"
+      ]
     }
   ]
 }

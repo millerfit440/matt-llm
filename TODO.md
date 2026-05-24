@@ -1,10 +1,10 @@
 # TODO
 
 ## Now
-- Initial repo setup complete — ready for first real task
+- Competitive agent ready for first weekly sweep
 
 ## Next
-- Define first project or work stream
+- Schedule or trigger first competitive sweep
 - Add specific tasks as they come up
 
 ## Waiting
@@ -12,3 +12,4 @@
 
 ## Done
 - [2026-04-06] Created repo structure, protocols, and main agent
+- [2026-05-24] Added SWEAT440 brand law doc and competitive agent
