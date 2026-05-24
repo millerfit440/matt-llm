@@ -1,10 +1,11 @@
 # TODO
 
 ## Now
-- Competitive agent ready for first weekly sweep
+- Review competitive brief for week of 2026-05-24 (see agents/competitive/briefs/2026-05-24.md)
+- Decide on Option A (OTF counter-program), B (ecosystem audit), or C (monitor Barry's LIFT)
 
 ## Next
-- Schedule or trigger first competitive sweep
+- Next competitive sweep: week of 2026-05-31
 - Add specific tasks as they come up
 
 ## Waiting

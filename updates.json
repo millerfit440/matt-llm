@@ -30,6 +30,16 @@
         "TODO.md",
         "updates.json"
       ]
+    },
+    {
+      "date": "2026-05-24",
+      "type": "task",
+      "summary": "Ran first competitive sweep. Researched F45, OrangeTheory, Solidcore, and Barry's for the week of 2026-05-24. Key findings: OTF launching Season of Strength challenge (June 1–July 26, $35 registration); Solidcore expanded Core Collective wellness partnership program; Barry's hit 100 studios and launched LIFT strength-only modality; F45 sustaining 'This Is F45 Training' global campaign. All four competitors are converging on strength positioning and lifestyle ecosystem expansion. Three decision options surfaced for Matt's review.",
+      "files_changed": [
+        "agents/competitive/briefs/2026-05-24.md",
+        "TODO.md",
+        "updates.json"
+      ]
     }
   ]
 }
