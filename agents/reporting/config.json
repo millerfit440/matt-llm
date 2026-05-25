@@ -1,0 +1,14 @@
+{
+  "name": "reporting",
+  "role": "Weekly roll-up: consolidates the week's agent outputs into one scorecard.",
+  "soul": "agents/reporting/soul.md",
+  "protocols": [
+    "docs/protocols/flywheel.md",
+    "docs/protocols/memory.md"
+  ],
+  "brand": "docs/brand/sweat440-brand-law.md",
+  "memory": {
+    "todo": "TODO.md",
+    "updates": "updates.json"
+  }
+}

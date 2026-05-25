@@ -40,6 +40,17 @@
         "TODO.md",
         "updates.json"
       ]
+    },
+    {
+      "date": "2026-05-25",
+      "type": "task",
+      "summary": "Added reporting agent. Consolidation-only agent that reads other agents' weekly brief outputs and produces a single decision-ready scorecard. No web searches, no new findings. Saves scorecards to agents/reporting/scorecards/YYYY-MM-DD.md and follows full Memory write-back protocol.",
+      "files_changed": [
+        "agents/reporting/config.json",
+        "agents/reporting/soul.md",
+        "TODO.md",
+        "updates.json"
+      ]
     }
   ]
 }
