@@ -51,6 +51,20 @@
         "TODO.md",
         "updates.json"
       ]
+    },
+    {
+      "date": "2026-05-30",
+      "type": "task",
+      "summary": "Vendored the SWEAT440 paid-ad-review skill into the repo and added the missing StoryBrand 2.0 reference. The skill's SKILL.md referenced references/storybrand-framework.md but the file did not exist in any copy, and the active installed copy had lost its references/ folder entirely. Wrote storybrand-framework.md (reader-as-hero rule, seven beats, pillar-to-internal-problem and pillar-to-transformation mappings, one-pillar enforcement, review checklist), repaired the installed copy and the downloadable .skill bundle, added a v2.0 version comment to SKILL.md, and committed the full skill source to skills/sweat440-paid-ad-review/ as the version-controlled source of truth. Verified by running the skill on a sample ad — StoryBrand checks fired correctly.",
+      "files_changed": [
+        "skills/sweat440-paid-ad-review/SKILL.md",
+        "skills/sweat440-paid-ad-review/references/storybrand-framework.md",
+        "skills/sweat440-paid-ad-review/references/pillars-and-personas.md",
+        "skills/sweat440-paid-ad-review/references/standing-standards.md",
+        "skills/sweat440-paid-ad-review/references/sop-framework.md",
+        "TODO.md",
+        "updates.json"
+      ]
     }
   ]
 }

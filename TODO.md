@@ -15,3 +15,4 @@
 - [2026-04-06] Created repo structure, protocols, and main agent
 - [2026-05-24] Added SWEAT440 brand law doc and competitive agent
 - [2026-05-25] Added reporting agent
+- [2026-05-30] Vendored paid-ad-review skill into repo + added StoryBrand 2.0 reference (v2.0)
