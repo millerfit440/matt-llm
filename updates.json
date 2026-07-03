@@ -77,6 +77,16 @@
         "TODO.md",
         "updates.json"
       ]
+    },
+    {
+      "date": "2026-07-03",
+      "type": "task",
+      "summary": "CRM confirmed: SWEAT440 runs on Mindbody. Verified via web research that Mindbody Public API v6 + Webhooks cover both critical needs: GetClientVisits/GetClassVisits for check-in data (streaks + points) and the ReferredBy field on client profiles (present in client.created webhook payloads) for referral attribution. Updated the app brief with a Mindbody integration section and replaced the open CRM question with a concrete next action: register a developer account, get sandbox access, and confirm whether the franchise is one Mindbody site with many locations or site-per-franchisee.",
+      "files_changed": [
+        "docs/projects/sweat440-app/brief.md",
+        "TODO.md",
+        "updates.json"
+      ]
     }
   ]
 }

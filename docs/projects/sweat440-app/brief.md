@@ -64,10 +64,23 @@ Claude-powered chat: "what's today's workout," "find me an event this week," gen
 2. **Working prototype (next):** Expo (React Native) + Supabase (auth, Postgres, realtime) + Claude API. TestFlight pilot: one studio, 20–30 members, 4 weeks.
 3. **Success metrics (pilot):** weekly active usage ≥ 50% of pilot group; ≥ 1 organic community post/event per week not seeded by staff; ≥ 10% of pilot members send at least one referral.
 
+## CRM: Mindbody (confirmed 2026-07-03)
+
+SWEAT440 runs on Mindbody. What its Public API v6 + Webhooks API give us:
+
+- **Check-ins:** `GetClientVisits` / `GetClassVisits` return visit data per client/class — this powers streaks and check-in points. Webhooks push events in near-real-time (no polling), so points can land in the app right after class.
+- **Referral attribution:** client profiles carry a **`ReferredBy`** field, included in the `client.created` webhook payload. v1 referral flow: friend books first class with member's code → front desk (or online intake) sets Referred By → webhook fires → app credits both sides. Cleaner long-term: app-side attribution keyed to Mindbody client IDs, with `ReferredBy` as the CRM record.
+- **Account matching:** app login matched to Mindbody client ID by email at signup.
+- **Studio list:** each location is a Mindbody site/location — the Home Studio dropdown can be fed from the API rather than hand-maintained.
+
+**To do before build phase (see TODO):** register a Mindbody developer account, get sandbox access, and confirm how SWEAT440's franchise is structured in Mindbody (one site with many locations vs. site-per-franchisee — this determines API keys, costs, and whether each franchisee must approve the integration). Note the API v6 vs. webhooks time-format quirk (local time vs. ISO UTC) for the build team.
+
+Docs: [developers.mindbodyonline.com](https://developers.mindbodyonline.com/) · [API endpoints](https://developers.mindbodyonline.com/Resources/Endpoints) · [Webhooks](https://developers.mindbodyonline.com/WebhooksDocumentation) · [API FAQ](https://support.mindbodyonline.com/s/article/API-FAQ?language=en_US)
+
 ## Open questions
 
-1. **Which CRM does SWEAT440 use, and what does its API expose?** Check-ins and referral attribution both depend on this. Biggest technical risk — answer before build phase.
-2. **Canonical studio list source** for the Home Studio dropdown (and how new studios get added).
+1. ~~Which CRM does SWEAT440 use?~~ **Answered: Mindbody** (see section above). Remaining sub-question: franchise site structure in Mindbody (one site vs. site-per-franchisee).
+2. **Canonical studio list source** for the Home Studio dropdown — likely resolvable via the Mindbody API once we have access.
 3. **Birthday/age display policy** — collect birthday for perks (birthday reward?) but decide what's shown publicly. Also: 18+ only?
 4. **Who moderates community boards** at the studio level (franchise owner? HQ?).
 5. **Referral reward economics** — what's a referral worth in points/dollars, and who funds it (HQ vs. franchisee)?
