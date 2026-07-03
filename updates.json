@@ -87,6 +87,16 @@
         "TODO.md",
         "updates.json"
       ]
+    },
+    {
+      "date": "2026-07-03",
+      "type": "task",
+      "summary": "Prototype v1.1 per Matt's direction: community board is now network-wide, defaulting to All Studios with a studio filter that scopes board, member discovery, and events together; profiles rebuilt on the Instagram model \u2014 follow/unfollow (with follow-request flow for private accounts), public/private toggle, photo/video media grid, and member-to-member DMs (threads list + conversation view, envelope icon in the app bar). Fixed a crash when opening a DM thread with no prior messages. Verified all new flows plus regressions in browser preview (no console errors) and republished the artifact at the same URL. Brief updated: community loop rewritten for the IG model, moderation/safety open question expanded (blocking/reporting at launch, media storage cost, DMs text-only in v1 recommended).",
+      "files_changed": [
+        "docs/projects/sweat440-app/brief.md",
+        "docs/projects/sweat440-app/prototype/v1.html",
+        "updates.json"
+      ]
     }
   ]
 }

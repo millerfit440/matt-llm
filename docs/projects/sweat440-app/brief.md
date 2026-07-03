@@ -16,23 +16,19 @@ A community- and workout-driven mobile app for SWEAT440 members. Long-term visio
 ## The three core loops
 
 ### 1. Community loop
-Dating-app-style member profiles, focused on SWEAT440 — connection, not romance (though we don't fight it if it happens).
+Instagram-model social layer, focused on SWEAT440 — connection, not romance (though we don't fight it if it happens).
 
-**Profile fields (v1):**
-- Name
-- Photo
-- Home Studio — dropdown of SWEAT440 studio locations
-- Location (city/neighborhood)
-- Birthday (internal; display age or age range — TBD, see open questions)
-- Occupation
-- Fitness goals (multi-select: strength, weight loss, endurance, community, etc.)
-- Usual class times (helps members find people on their schedule)
-- Short bio / interests
+**Profiles (Instagram-style, updated 2026-07-03):**
+- Follow / unfollow between members
+- Public or private accounts (private = follow requests, locked media grid)
+- Photo + video grid on each profile
+- Direct messages (member-to-member; text-only in v1 to keep moderation scope sane)
+- Profile fields: Name, Photo, Home Studio (dropdown of SWEAT440 studios), Location, Birthday (private — only age shows), Occupation, Fitness goals (multi-select), Usual class times, Short bio
 
-**Around profiles:**
-- Studio-scoped community board (posts, questions, wins)
+**Board (updated 2026-07-03):**
+- One network-wide community board that **defaults to All Studios** and filters down to a single studio — the studio filter scopes the board, member discovery, and events together
 - Events / meetups with RSVP (run clubs, post-class coffee, challenges)
-- Member discovery filtered by home studio, goals, class times — simple filters, **no matching algorithm in v1**
+- Member discovery filtered by studio, goals, class times — simple filters, **no matching algorithm in v1**
 
 ### 2. Workout loop
 - **Studio WOD:** the day's SWEAT440 programming in-app (4 stations × 10 min format), synced to the member's home studio
@@ -82,7 +78,7 @@ Docs: [developers.mindbodyonline.com](https://developers.mindbodyonline.com/) ·
 1. ~~Which CRM does SWEAT440 use?~~ **Answered: Mindbody** (see section above). Remaining sub-question: franchise site structure in Mindbody (one site vs. site-per-franchisee).
 2. **Canonical studio list source** for the Home Studio dropdown — likely resolvable via the Mindbody API once we have access.
 3. **Birthday/age display policy** — collect birthday for perks (birthday reward?) but decide what's shown publicly. Also: 18+ only?
-4. **Who moderates community boards** at the studio level (franchise owner? HQ?).
+4. **Moderation and safety** — the Instagram model (user photos/videos, DMs, follows) raises the stakes well beyond a text board: blocking, reporting, and content review must ship at launch, and media storage/CDN is now a real build cost. Who owns moderation — franchise owner or HQ? Note: this also expands the working-prototype scope; keeping DMs text-only in v1 is the recommended pressure valve.
 5. **Referral reward economics** — what's a referral worth in points/dollars, and who funds it (HQ vs. franchisee)?
 
 ## File map

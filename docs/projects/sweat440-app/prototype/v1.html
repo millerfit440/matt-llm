@@ -31,13 +31,18 @@
   @media (max-height:900px){ .phone{height:min(780px,calc(100vh - 130px));min-height:560px} }
 
   .appbar{
-    background:var(--blue); color:#fff; padding:14px 16px 12px;
-    display:flex; align-items:center; justify-content:space-between; flex:0 0 auto;
+    background:var(--blue); color:#fff; padding:12px 16px 11px;
+    display:flex; align-items:center; justify-content:space-between; flex:0 0 auto; gap:10px;
   }
   .logo{
     font-family:Oswald,'Arial Narrow',sans-serif; font-style:italic; font-weight:700;
     text-transform:uppercase; font-size:19px; letter-spacing:.5px;
   }
+  .appbar .right{display:flex; align-items:center; gap:10px}
+  .icon-btn{
+    border:0; background:none; cursor:pointer; padding:2px; display:flex;
+  }
+  .icon-btn svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:1.8}
   .pts-chip{
     background:var(--volt); color:var(--ink); font-weight:700; font-size:12.5px;
     padding:4px 10px; border-radius:999px; font-variant-numeric:tabular-nums;
@@ -68,6 +73,10 @@
     text-transform:uppercase; font-size:17px; color:var(--deep);
     letter-spacing:.4px; margin:2px 0 10px;
   }
+  .back{
+    border:0; background:none; cursor:pointer; font-family:inherit;
+    color:var(--deep); font-weight:700; font-size:13px; padding:0; margin-bottom:10px;
+  }
   .card{
     background:#fff; border:1px solid var(--line); border-radius:14px;
     padding:14px; margin-bottom:12px;
@@ -81,6 +90,7 @@
   .btn-blue{background:var(--blue); color:#fff}
   .btn-ghost{background:var(--ice); color:var(--deep)}
   .btn-wide{width:100%; text-align:center}
+  .btn-sm{padding:7px 12px; font-size:12px}
   .chip{
     display:inline-block; font-size:11.5px; font-weight:600; color:var(--deep);
     background:var(--ice); border:1px solid var(--light); border-radius:999px;
@@ -113,6 +123,29 @@
     border:1px solid var(--line); border-radius:10px; padding:10px 12px; background:#fff;
   }
   textarea.f{resize:none}
+  .switchrow{display:flex; align-items:center; gap:10px; margin-top:12px}
+  .switchrow input{width:18px;height:18px;accent-color:var(--blue)}
+
+  /* instagram-style profile */
+  .stats{display:flex; gap:0; text-align:center; flex:1; justify-content:space-around}
+  .stats div b{display:block; font-size:16px; font-variant-numeric:tabular-nums}
+  .stats div span{font-size:11px; color:var(--sub)}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:3px; border-radius:12px; overflow:hidden; margin-top:12px}
+  .tile{
+    aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+    font-size:26px; position:relative; background:linear-gradient(135deg,var(--light),var(--blue));
+  }
+  .tile:nth-child(3n+2){background:linear-gradient(135deg,var(--ice),var(--light))}
+  .tile:nth-child(3n){background:linear-gradient(135deg,var(--blue),var(--deep))}
+  .tile.v::after{
+    content:'▶'; position:absolute; top:5px; right:7px; font-size:10px; color:#fff;
+    text-shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+  .lockbox{
+    border:1px dashed var(--light); border-radius:12px; text-align:center;
+    padding:26px 16px; margin-top:12px; color:var(--sub); font-size:13px;
+  }
+  .lockbox .lk{font-size:26px; display:block; margin-bottom:6px}
 
   /* workout stations */
   .station{display:flex; gap:12px; padding:11px 0; border-bottom:1px solid var(--line)}
@@ -147,12 +180,15 @@
   #scr-welcome .mega em{color:var(--volt); font-style:italic}
   #scr-welcome p{margin:14px 0 22px; color:var(--ice); font-size:14px; max-width:32ch}
 
-  /* chat */
+  /* chat / dm */
   .chat-wrap{display:flex; flex-direction:column; gap:8px; padding-bottom:8px}
   .bub{max-width:82%; padding:10px 13px; border-radius:14px; font-size:13.5px; line-height:1.45}
   .bub.bot{background:var(--ice); color:var(--ink); border-bottom-left-radius:4px; align-self:flex-start}
   .bub.me{background:var(--blue); color:#fff; border-bottom-right-radius:4px; align-self:flex-end}
   .chat-input{display:flex; gap:8px; margin-top:10px}
+  .thread-row{cursor:pointer}
+  .thread-row .muted{white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:200px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--volt);flex:0 0 auto}
 
   .redeem-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px}
   .redeem-grid .card{margin-bottom:0}
@@ -169,27 +205,40 @@
 </style>
 
 <div class="head-note">
-  <h1>SWEAT440 Community App — Prototype v1</h1>
-  <p>Clickable mockup. Everything is fake data — tap through the tabs. Rewards points react to check-ins, RSVPs and referrals.</p>
+  <h1>SWEAT440 Community App — Prototype v1.1</h1>
+  <p>Clickable mockup, all fake data. New in v1.1: network-wide board with studio filter, Instagram-style profiles (follow, public/private, media grid) and DMs — tap the ✉ icon.</p>
 </div>
 
 <div class="phone">
   <div class="appbar">
     <div class="logo">SWEAT440</div>
-    <div class="pts-chip" id="ptsChip">⚡ 1,240 pts</div>
+    <div class="right">
+      <div class="pts-chip" id="ptsChip">⚡ 1,240 pts</div>
+      <button class="icon-btn" onclick="go('dms')" aria-label="Direct messages">
+        <svg viewBox="0 0 24 24"><path d="M21 4L11.5 13.5M21 4l-6.2 17-3.3-7.5L4 10.2z"/></svg>
+      </button>
+    </div>
   </div>
 
   <!-- WELCOME -->
   <div class="screen active" id="scr-welcome">
     <div class="mega">Your gym.<br>Your crew.<br><em>No waiting.</em></div>
-    <p>Meet members at your studio, get today's workout, and earn rewards every time you check in or bring a friend.</p>
+    <p>Follow members across every SWEAT440 studio, get today's workout, and earn rewards every time you check in or bring a friend.</p>
     <button class="btn btn-volt btn-wide" onclick="go('profile');subTab('profile','edit')" style="margin-bottom:10px">Create my profile</button>
     <button class="btn btn-wide" style="background:rgba(255,255,255,.16);color:#fff" onclick="go('community')">Explore as demo member</button>
   </div>
 
   <!-- COMMUNITY -->
   <div class="screen" id="scr-community">
-    <h2 class="sec">Community — SWEAT440 Brickell</h2>
+    <h2 class="sec">Community</h2>
+    <select class="f" id="studioFilter" onchange="applyStudio()" style="margin-bottom:12px">
+      <option value="all">🌎 All studios</option>
+      <option value="Brickell">SWEAT440 Brickell</option>
+      <option value="Miami Beach">SWEAT440 Miami Beach</option>
+      <option value="Midtown Miami">SWEAT440 Midtown Miami</option>
+      <option value="Coral Gables">SWEAT440 Coral Gables</option>
+      <option value="Austin">SWEAT440 Austin</option>
+    </select>
     <div class="seg" id="seg-community">
       <button class="on" onclick="subTab('community','board')">Board</button>
       <button onclick="subTab('community','members')">Members</button>
@@ -197,59 +246,96 @@
     </div>
 
     <div id="community-board">
-      <div class="card">
+      <div class="card" data-studio="Brickell">
         <div class="row">
           <div class="avatar">DR</div>
           <div class="grow"><b style="font-size:13.5px">Dani R.</b><div class="muted">Brickell · 2h ago</div></div>
         </div>
         <p style="font-size:13.5px;margin:9px 0">Hit a 200lb deadlift at station 3 today!! Six months ago I couldn't do 95. This place works 💪</p>
-        <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" onclick="toast('You cheered Dani 🎉')">🔥 Cheer · 12</button>
+        <button class="btn btn-ghost btn-sm" onclick="toast('You cheered Dani 🎉')">🔥 Cheer · 12</button>
       </div>
-      <div class="card">
+      <div class="card" data-studio="Austin">
+        <div class="row">
+          <div class="avatar alt">JH</div>
+          <div class="grow"><b style="font-size:13.5px">Jake H.</b><div class="muted">Austin · 3h ago</div></div>
+        </div>
+        <p style="font-size:13.5px;margin:9px 0">Austin crew — new shipment of the recovery drinks is in. The watermelon one is dangerously good 🍉</p>
+        <button class="btn btn-ghost btn-sm" onclick="toast('You cheered Jake 🎉')">🔥 Cheer · 7</button>
+      </div>
+      <div class="card" data-studio="Brickell">
         <div class="row">
           <div class="avatar alt">MK</div>
           <div class="grow"><b style="font-size:13.5px">Marcus K.</b><div class="muted">Brickell · 5h ago</div></div>
         </div>
         <p style="font-size:13.5px;margin:9px 0">Anyone doing the 6:40am class tomorrow? Looking for a station partner who won't let me skip burpees.</p>
-        <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" onclick="toast('Reply sent to Marcus')">💬 I'm in</button>
+        <button class="btn btn-ghost btn-sm" onclick="toast('Reply sent to Marcus')">💬 I'm in</button>
       </div>
-      <div class="card">
+      <div class="card" data-studio="Miami Beach">
         <div class="row">
           <div class="avatar">SL</div>
-          <div class="grow"><b style="font-size:13.5px">Sofia L.</b><div class="muted">Brickell · 1d ago</div></div>
+          <div class="grow"><b style="font-size:13.5px">Sofia L.</b><div class="muted">Miami Beach · 1d ago</div></div>
         </div>
         <p style="font-size:13.5px;margin:9px 0">New to Miami + new to SWEAT440. What should I eat before a 7pm class? 😅</p>
-        <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" onclick="toast('Reply posted · <b>+10 pts</b>',10)">💬 Reply · 4</button>
+        <button class="btn btn-ghost btn-sm" onclick="toast('Reply posted · <b>+10 pts</b>',10)">💬 Reply · 4</button>
       </div>
+      <p class="muted" id="boardEmpty" style="display:none;text-align:center;padding:16px 0">No posts from this studio yet — be the first.</p>
       <button class="btn btn-blue btn-wide" onclick="toast('Post published · <b>+10 pts</b>',10)">+ New post</button>
     </div>
 
     <div id="community-members" style="display:none">
       <div style="margin-bottom:10px">
         <span class="muted" style="font-weight:700">Filter by goal:</span><br>
-        <button class="chip" onclick="filterMembers('all',this)" style="cursor:pointer">All</button><button class="chip" onclick="filterMembers('strength',this)" style="cursor:pointer">Strength</button><button class="chip" onclick="filterMembers('weight loss',this)" style="cursor:pointer">Weight loss</button><button class="chip" onclick="filterMembers('community',this)" style="cursor:pointer">Community</button>
+        <button class="chip mint" onclick="filterGoal('all',this)" style="cursor:pointer">All</button><button class="chip" onclick="filterGoal('strength',this)" style="cursor:pointer">Strength</button><button class="chip" onclick="filterGoal('weight loss',this)" style="cursor:pointer">Weight loss</button><button class="chip" onclick="filterGoal('community',this)" style="cursor:pointer">Community</button>
       </div>
       <div id="memberList"></div>
       <p class="muted" style="text-align:center;margin-top:4px">v1 uses simple filters — no matching algorithm.</p>
     </div>
 
     <div id="community-events" style="display:none">
-      <div class="card tint">
+      <div class="card tint" data-studio="Brickell">
         <b style="font-size:14px">☕ Post-class coffee crew</b>
         <div class="muted" style="margin:4px 0 8px">Sat Jul 5 · 10:30am · Brickell · hosted by Dani R. · 8 going</div>
         <button class="btn btn-volt" data-rsvp="0" onclick="rsvp(this)">RSVP</button>
       </div>
-      <div class="card tint">
+      <div class="card tint" data-studio="Miami Beach">
         <b style="font-size:14px">🏃 Bayfront 5K run club</b>
-        <div class="muted" style="margin:4px 0 8px">Sun Jul 6 · 8:00am · Bayfront Park · 14 going</div>
+        <div class="muted" style="margin:4px 0 8px">Sun Jul 6 · 8:00am · Bayfront Park · Miami Beach · 14 going</div>
         <button class="btn btn-volt" data-rsvp="0" onclick="rsvp(this)">RSVP</button>
       </div>
-      <div class="card tint">
+      <div class="card tint" data-studio="Austin">
+        <b style="font-size:14px">🌮 Taco Tuesday after 6pm class</b>
+        <div class="muted" style="margin:4px 0 8px">Tue Jul 8 · 7:15pm · Austin · 9 going</div>
+        <button class="btn btn-volt" data-rsvp="0" onclick="rsvp(this)">RSVP</button>
+      </div>
+      <div class="card tint" data-studio="Brickell">
         <b style="font-size:14px">🎉 July member social</b>
         <div class="muted" style="margin:4px 0 8px">Fri Jul 11 · 7:30pm · Brickell studio · 22 going</div>
         <button class="btn btn-volt" data-rsvp="0" onclick="rsvp(this)">RSVP</button>
       </div>
+      <p class="muted" id="eventsEmpty" style="display:none;text-align:center;padding:16px 0">No events at this studio yet.</p>
       <button class="btn btn-blue btn-wide" onclick="toast('Event creation — coming in build phase')">+ Create an event</button>
+    </div>
+  </div>
+
+  <!-- MEMBER PROFILE (Instagram-style) -->
+  <div class="screen" id="scr-member"></div>
+
+  <!-- DMs -->
+  <div class="screen" id="scr-dms">
+    <button class="back" onclick="go('community')">‹ Community</button>
+    <h2 class="sec">Messages</h2>
+    <div id="threadList"></div>
+    <p class="muted" style="text-align:center;margin-top:6px">DMs are member-to-member. Blocking + reporting ship with v1 of the real app.</p>
+  </div>
+
+  <!-- DM THREAD -->
+  <div class="screen" id="scr-thread">
+    <button class="back" onclick="go('dms')">‹ Messages</button>
+    <h2 class="sec" id="threadTitle">Chat</h2>
+    <div class="chat-wrap" id="threadWrap"></div>
+    <div class="chat-input">
+      <input class="f" id="threadIn" placeholder="Message…" onkeydown="if(event.key==='Enter')sendDM()">
+      <button class="btn btn-blue" onclick="sendDM()">Send</button>
     </div>
   </div>
 
@@ -285,7 +371,7 @@
         </div>
       </div>
       <button class="btn btn-volt btn-wide" id="checkinBtn" onclick="checkin()">✓ Check in to class · +50 pts</button>
-      <p class="muted" style="text-align:center;margin-top:8px">Check-ins sync from the CRM in the real app.</p>
+      <p class="muted" style="text-align:center;margin-top:8px">Check-ins sync from Mindbody in the real app.</p>
     </div>
 
     <div id="workout-home" style="display:none">
@@ -325,7 +411,7 @@
       <p class="muted" style="margin-top:3px">Your friend's first class is free. When they join, you get <b>500 pts</b> and they start with <b>250 pts</b>.</p>
       <div class="refcode">MATT-440</div>
       <button class="btn btn-volt btn-wide" onclick="toast('Invite link copied — send it to a friend! · <b>+25 pts</b>',25)">Invite a friend</button>
-      <p class="muted" style="text-align:center;margin-top:8px">Referral attribution runs through the CRM in the real app.</p>
+      <p class="muted" style="text-align:center;margin-top:8px">Referral attribution runs through Mindbody's Referred By field in the real app.</p>
     </div>
 
     <div class="card">
@@ -364,7 +450,7 @@
     <p class="muted" style="margin-top:8px">Canned demo replies — Claude-powered in the real app.</p>
   </div>
 
-  <!-- PROFILE -->
+  <!-- MY PROFILE -->
   <div class="screen" id="scr-profile">
     <h2 class="sec">My profile</h2>
     <div class="seg" id="seg-profile">
@@ -373,16 +459,29 @@
     </div>
 
     <div id="profile-view">
-      <div class="card tint" style="text-align:center">
-        <div class="avatar big" style="margin:0 auto 8px" id="pvAvatar">M</div>
-        <div style="font-family:Oswald,'Arial Narrow',sans-serif;font-style:italic;font-weight:700;font-size:20px;text-transform:uppercase" id="pvName">Matt M.</div>
-        <div class="muted" id="pvMeta">34 · Marketing Director · Miami, FL</div>
-        <div style="margin:8px 0 4px"><span class="chip mint" id="pvStudio">🏠 SWEAT440 Brickell</span></div>
-        <div id="pvGoals"><span class="chip">Strength</span><span class="chip">Community</span></div>
-        <div class="muted" style="margin-top:8px" id="pvTimes">Usually in class: weekdays 6–7am</div>
-        <p style="font-size:13px;margin-top:8px" id="pvBio">"Here for the sled pushes and the people. Ask me about pre-workout coffee."</p>
+      <div class="card">
+        <div class="row">
+          <div class="avatar big" id="pvAvatar">M</div>
+          <div class="stats">
+            <div><b>12</b><span>posts</span></div>
+            <div><b>148</b><span>followers</span></div>
+            <div><b>132</b><span>following</span></div>
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <b style="font-size:15px" id="pvName">Matt M.</b> <span id="pvLock"></span>
+          <div class="muted" id="pvMeta">34 · Marketing Director · Miami, FL</div>
+          <div style="margin:6px 0 2px"><span class="chip mint" id="pvStudio">🏠 SWEAT440 Brickell</span><span id="pvGoals"><span class="chip">Strength</span><span class="chip">Community</span></span></div>
+          <div class="muted" id="pvTimes">Usually in class: weekdays 6–7am</div>
+          <p style="font-size:13px;margin-top:6px" id="pvBio">"Here for the sled pushes and the people. Ask me about pre-workout coffee."</p>
+        </div>
+        <div class="grid3">
+          <div class="tile">🏋️</div><div class="tile v">🛷</div><div class="tile">💪</div>
+          <div class="tile">🚴</div><div class="tile">🤸</div><div class="tile v">🏃</div>
+        </div>
+        <button class="btn btn-ghost btn-wide" style="margin-top:12px" onclick="toast('Photo/video upload — coming in build phase')">+ New post</button>
       </div>
-      <p class="muted" style="text-align:center">This is what other members see. Birthday stays private — only age shows.</p>
+      <p class="muted" style="text-align:center" id="pvPrivNote">Public account — anyone at SWEAT440 can see your posts. Birthday stays private; only age shows.</p>
     </div>
 
     <div id="profile-edit" style="display:none">
@@ -415,6 +514,10 @@
         </select>
         <label class="f" for="fBio">Short bio</label>
         <textarea class="f" id="fBio" rows="2">Here for the sled pushes and the people. Ask me about pre-workout coffee.</textarea>
+        <div class="switchrow">
+          <input type="checkbox" id="fPriv">
+          <label for="fPriv" style="font-size:13px"><b>Private account</b> — people must request to follow you</label>
+        </div>
         <div style="margin-top:14px"><button class="btn btn-volt btn-wide" onclick="saveProfile()">Save profile</button></div>
       </div>
     </div>
@@ -444,6 +547,9 @@
 <script>
   var pts = 1240;
   var checkedIn = false;
+  var curStudio = 'all';
+  var curGoal = 'all';
+  var followState = {}; /* name -> 'following' | 'requested' */
 
   function fmt(n){ return n.toLocaleString('en-US'); }
   function addPts(n){
@@ -462,13 +568,16 @@
     toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2400);
   }
 
-  var screens = ['welcome','community','workout','rewards','coach','profile'];
+  var screens = ['welcome','community','member','dms','thread','workout','rewards','coach','profile'];
   function go(name){
     screens.forEach(function(s){
       document.getElementById('scr-' + s).classList.toggle('active', s === name);
       var tab = document.getElementById('tab-' + s);
       if (tab) tab.classList.toggle('on', s === name);
     });
+    /* member/dms/thread live under the Community tab conceptually */
+    if (name === 'member' || name === 'dms' || name === 'thread')
+      document.getElementById('tab-community').classList.add('on');
   }
 
   var subPanels = {
@@ -485,42 +594,209 @@
     });
   }
 
-  /* members */
+  /* ---------- studio filter (board + events + members) ---------- */
+  function applyStudio(){
+    curStudio = document.getElementById('studioFilter').value;
+    ['community-board','community-events'].forEach(function(sec){
+      var cards = document.querySelectorAll('#' + sec + ' [data-studio]');
+      var shown = 0;
+      cards.forEach(function(c){
+        var ok = (curStudio === 'all' || c.dataset.studio === curStudio);
+        c.style.display = ok ? '' : 'none';
+        if (ok) shown++;
+      });
+      var empty = document.getElementById(sec === 'community-board' ? 'boardEmpty' : 'eventsEmpty');
+      empty.style.display = shown ? 'none' : '';
+    });
+    renderMembers();
+  }
+
+  /* ---------- members ---------- */
   var members = [
-    {init:'JT', name:'Jess T.', meta:'29 · Nurse · Brickell', goals:['strength','community'], times:'Weekday evenings'},
-    {init:'CB', name:'Carlos B.', meta:'41 · Realtor · Brickell', goals:['weight loss'], times:'Weekdays 6–7am'},
-    {init:'AN', name:'Aisha N.', meta:'33 · Software engineer · Midtown', goals:['strength'], times:'Weekends'},
-    {init:'TP', name:'Tom P.', meta:'36 · Chef · Brickell', goals:['weight loss','community'], times:'Weekdays lunch'},
-    {init:'LV', name:'Lucía V.', meta:'27 · Grad student · Coral Gables', goals:['community'], times:'Weekday evenings'}
+    {init:'JT', name:'Jess T.', meta:'29 · Nurse', studio:'Brickell', goals:['strength','community'], times:'Weekday evenings',
+     bio:'Night-shift nurse, evening classes keep me sane.', priv:false, stats:[34,210,198], tiles:['🏋️','🏃','💪','🧘','🛷','🤸']},
+    {init:'CB', name:'Carlos B.', meta:'41 · Realtor', studio:'Brickell', goals:['weight loss'], times:'Weekdays 6–7am',
+     bio:'Down 22 lbs since January. The 6:40am crew is undefeated.', priv:false, stats:[18,96,120], tiles:['🚴','💪','🏋️','🥗','🏃','⏱️']},
+    {init:'AN', name:'Aisha N.', meta:'33 · Software engineer', studio:'Midtown Miami', goals:['strength'], times:'Weekends',
+     bio:'Weekend warrior. Chasing my first pull-up.', priv:false, stats:[27,143,101], tiles:['🤸','🏋️','💪','🛷','🚴','🧗']},
+    {init:'TP', name:'Tom P.', meta:'36 · Chef', studio:'Brickell', goals:['weight loss','community'], times:'Weekdays lunch',
+     bio:'Chef by night, lunch classes by day. Ask me about protein.', priv:false, stats:[41,187,166], tiles:['🥗','🏋️','🍳','💪','🏃','🥤']},
+    {init:'LV', name:'Lucía V.', meta:'27 · Grad student', studio:'Coral Gables', goals:['community'], times:'Weekday evenings',
+     bio:'', priv:true, stats:[52,88,140], tiles:[]},
+    {init:'JH', name:'Jake H.', meta:'31 · Firefighter', studio:'Austin', goals:['strength','community'], times:'It varies',
+     bio:'Austin studio regular. Station 1 is my house.', priv:false, stats:[63,301,255], tiles:['🔥','🏋️','🛷','💪','🚒','🏃']}
   ];
-  function renderMembers(filter){
+
+  function followLabel(m){
+    var st = followState[m.name];
+    if (st === 'following') return 'Following';
+    if (st === 'requested') return 'Requested';
+    return m.priv ? 'Request' : 'Follow';
+  }
+  function renderMembers(){
     var html = '';
     members.forEach(function(m, i){
-      if (filter && filter !== 'all' && m.goals.indexOf(filter) === -1) return;
+      if (curGoal !== 'all' && m.goals.indexOf(curGoal) === -1) return;
+      if (curStudio !== 'all' && m.studio !== curStudio) return;
       var chips = m.goals.map(function(g){
         return '<span class="chip">' + g.charAt(0).toUpperCase() + g.slice(1) + '</span>';
       }).join('');
+      var isOn = followState[m.name];
       html += '<div class="card"><div class="row">' +
         '<div class="avatar' + (i % 2 ? ' alt' : '') + '">' + m.init + '</div>' +
-        '<div class="grow"><b style="font-size:13.5px">' + m.name + '</b>' +
-        '<div class="muted">' + m.meta + '</div>' +
-        '<div class="muted" style="font-size:11.5px">🕐 ' + m.times + '</div>' +
+        '<div class="grow"><b style="font-size:13.5px">' + m.name + (m.priv ? ' 🔒' : '') + '</b>' +
+        '<div class="muted">' + m.meta + ' · ' + m.studio + '</div>' +
         '<div style="margin-top:4px">' + chips + '</div></div>' +
-        '<button class="btn btn-ghost" style="padding:7px 12px;font-size:12px" onclick="toast(\'Wave sent to ' + m.name.replace(/'/g,'') + ' 👋\')">Say hi</button>' +
-        '</div></div>';
+        '<div style="display:flex;flex-direction:column;gap:6px">' +
+        '<button class="btn btn-sm ' + (isOn ? 'btn-ghost' : 'btn-volt') + '" onclick="toggleFollow(' + i + ');event.stopPropagation()">' + followLabel(m) + '</button>' +
+        '<button class="btn btn-ghost btn-sm" onclick="openMember(' + i + ')">View</button>' +
+        '</div></div></div>';
     });
     document.getElementById('memberList').innerHTML = html ||
-      '<p class="muted" style="text-align:center;padding:20px 0">No members match that filter yet.</p>';
+      '<p class="muted" style="text-align:center;padding:20px 0">No members match those filters yet.</p>';
   }
-  function filterMembers(goal, el){
-    var chips = el.parentElement.querySelectorAll('.chip');
-    chips.forEach(function(c){ c.classList.remove('mint'); });
+  function filterGoal(goal, el){
+    curGoal = goal;
+    el.parentElement.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('mint'); });
     el.classList.add('mint');
-    renderMembers(goal);
+    renderMembers();
   }
-  renderMembers('all');
+  function toggleFollow(i){
+    var m = members[i];
+    var st = followState[m.name];
+    if (st){
+      delete followState[m.name];
+      toast(st === 'requested' ? 'Request canceled' : 'Unfollowed ' + m.name);
+    } else if (m.priv){
+      followState[m.name] = 'requested';
+      toast('Follow request sent to ' + m.name);
+    } else {
+      followState[m.name] = 'following';
+      toast('Following ' + m.name + ' ✓');
+    }
+    renderMembers();
+    if (document.getElementById('scr-member').classList.contains('active')) openMember(i);
+  }
 
-  /* events */
+  /* ---------- member profile (IG-style) ---------- */
+  function openMember(i){
+    var m = members[i];
+    var st = followState[m.name];
+    var canSee = !m.priv || st === 'following';
+    var grid;
+    if (canSee){
+      grid = '<div class="grid3">' + m.tiles.map(function(t, j){
+        return '<div class="tile' + (j === 1 || j === 5 ? ' v' : '') + '">' + t + '</div>';
+      }).join('') + '</div>';
+    } else {
+      grid = '<div class="lockbox"><span class="lk">🔒</span>This account is private.<br>' +
+             (st === 'requested' ? 'Follow request pending.' : 'Request to follow to see their posts.') + '</div>';
+    }
+    var followBtnClass = st ? 'btn-ghost' : 'btn-volt';
+    document.getElementById('scr-member').innerHTML =
+      '<button class="back" onclick="subTab(\'community\',\'members\')">‹ Members</button>' +
+      '<div class="card">' +
+      '<div class="row"><div class="avatar big">' + m.init + '</div>' +
+      '<div class="stats">' +
+      '<div><b>' + m.stats[0] + '</b><span>posts</span></div>' +
+      '<div><b>' + m.stats[1] + '</b><span>followers</span></div>' +
+      '<div><b>' + m.stats[2] + '</b><span>following</span></div></div></div>' +
+      '<div style="margin-top:10px"><b style="font-size:15px">' + m.name + (m.priv ? ' 🔒' : '') + '</b>' +
+      '<div class="muted">' + m.meta + '</div>' +
+      '<div style="margin:6px 0 2px"><span class="chip mint">🏠 SWEAT440 ' + m.studio + '</span></div>' +
+      (canSee && m.bio ? '<p style="font-size:13px;margin-top:6px">"' + m.bio + '"</p>' : '') +
+      '</div>' +
+      '<div class="row" style="margin-top:12px">' +
+      '<button class="btn ' + followBtnClass + ' grow" onclick="toggleFollow(' + i + ')">' + followLabel(m) + '</button>' +
+      '<button class="btn btn-ghost grow" onclick="openThread(\'' + m.name.replace(/'/g,'') + '\')">Message</button>' +
+      '</div>' + grid + '</div>';
+    go('member');
+  }
+
+  /* ---------- DMs ---------- */
+  var threads = {
+    'Marcus K.': {unread:true, msgs:[
+      {who:'them', t:'Yo! You in for 6:40am tomorrow? Need a burpee accountability partner 😂'},
+      {who:'me', t:"I'm in. Station 3 first, then we suffer together."}
+    ]},
+    'Dani R.': {unread:false, msgs:[
+      {who:'them', t:'Coffee crew Saturday — you coming? Bringing two new members from the 7am class.'}
+    ]},
+    'Jess T.': {unread:true, msgs:[
+      {who:'them', t:'Hey! Saw we both do evening classes — want to team up for the July challenge? 👋'}
+    ]}
+  };
+  var curThread = null;
+  var replies = ['Let’s gooo 🔥', 'See you at the studio! 💪', 'Haha deal. First round of protein shakes on me.'];
+  var replyIdx = 0;
+
+  function renderThreads(){
+    var html = '';
+    Object.keys(threads).forEach(function(name){
+      var th = threads[name];
+      var last = th.msgs[th.msgs.length - 1];
+      var preview = last ? ((last.who === 'me' ? 'You: ' : '') + last.t) : 'New conversation';
+      var init = name.split(' ').map(function(w){ return w.charAt(0); }).join('');
+      html += '<div class="card thread-row" onclick="openThread(\'' + name.replace(/'/g,'') + '\')"><div class="row">' +
+        '<div class="avatar">' + init + '</div>' +
+        '<div class="grow"><b style="font-size:13.5px">' + name + '</b>' +
+        '<div class="muted">' + preview + '</div></div>' +
+        (th.unread ? '<div class="dot" aria-label="unread"></div>' : '') +
+        '</div></div>';
+    });
+    document.getElementById('threadList').innerHTML = html;
+  }
+  function openThread(name){
+    if (!threads[name]) threads[name] = {unread:false, msgs:[]};
+    curThread = name;
+    threads[name].unread = false;
+    document.getElementById('threadTitle').textContent = name;
+    var wrap = document.getElementById('threadWrap');
+    wrap.innerHTML = '';
+    threads[name].msgs.forEach(function(msg){
+      var b = document.createElement('div');
+      b.className = 'bub ' + (msg.who === 'me' ? 'me' : 'bot');
+      b.textContent = msg.t;
+      wrap.appendChild(b);
+    });
+    if (!threads[name].msgs.length){
+      var hint = document.createElement('p');
+      hint.className = 'muted';
+      hint.style.textAlign = 'center';
+      hint.textContent = 'Say hi to ' + name + ' 👋';
+      wrap.appendChild(hint);
+    }
+    renderThreads();
+    go('thread');
+  }
+  function sendDM(){
+    var inp = document.getElementById('threadIn');
+    var q = inp.value.trim();
+    if (!q || !curThread) return;
+    threads[curThread].msgs.push({who:'me', t:q});
+    inp.value = '';
+    var wrap = document.getElementById('threadWrap');
+    var me = document.createElement('div');
+    me.className = 'bub me';
+    me.textContent = q;
+    wrap.appendChild(me);
+    me.scrollIntoView({behavior:'smooth', block:'nearest'});
+    var name = curThread;
+    setTimeout(function(){
+      var t = replies[replyIdx++ % replies.length];
+      threads[name].msgs.push({who:'them', t:t});
+      if (curThread === name){
+        var b = document.createElement('div');
+        b.className = 'bub bot';
+        b.textContent = t;
+        wrap.appendChild(b);
+        b.scrollIntoView({behavior:'smooth', block:'nearest'});
+      }
+      renderThreads();
+    }, 600);
+  }
+
+  /* ---------- events ---------- */
   function rsvp(btn){
     if (btn.dataset.rsvp === '1'){
       btn.dataset.rsvp = '0';
@@ -535,7 +811,7 @@
     }
   }
 
-  /* check-in */
+  /* ---------- check-in ---------- */
   function checkin(){
     if (checkedIn){ toast('Already checked in today ✓'); return; }
     checkedIn = true;
@@ -545,7 +821,7 @@
     toast('Checked in at Brickell · <b>+50 pts</b>', 50);
   }
 
-  /* in-home generator */
+  /* ---------- in-home generator ---------- */
   var plans = {
     none: {
       full:  ['Jump squats + reverse lunges','Push-up ladder + shoulder taps','Mountain climbers + high knees','Plank series + V-ups'],
@@ -588,13 +864,13 @@
     el.scrollIntoView({behavior:'smooth', block:'nearest'});
   }
 
-  /* chat */
+  /* ---------- Coach 440 chat ---------- */
   function botReply(q){
     q = q.toLowerCase();
     if (q.indexOf('wod') > -1 || q.indexOf('today') > -1 || q.indexOf('workout') > -1)
       return "Today at Brickell it's Shred Thursday: sled pushes, DB thrusters, assault bike sprints, and a core finisher — 4 stations, 10 minutes each. Want me to build an at-home version instead?";
     if (q.indexOf('event') > -1 || q.indexOf('week') > -1)
-      return "Three things coming up: coffee crew Saturday 10:30am, Bayfront 5K Sunday 8am, and the July member social next Friday. The 5K matches your usual morning schedule — want me to RSVP you?";
+      return "Coming up: coffee crew Saturday 10:30am (Brickell), Bayfront 5K Sunday 8am, Taco Tuesday in Austin, and the July member social next Friday. Want me to RSVP you to one?";
     if (q.indexOf('home') > -1)
       return "Head to Workout → In-Home, pick your equipment and time, and I'll build you a 4-station session. With dumbbells and 30 minutes I'd suggest a full-body split.";
     if (q.indexOf('point') > -1 || q.indexOf('reward') > -1 || q.indexOf('refer') > -1)
@@ -620,7 +896,7 @@
     }, 450);
   }
 
-  /* profile */
+  /* ---------- my profile ---------- */
   function saveProfile(){
     var name = document.getElementById('fName').value || 'Member';
     var studio = document.getElementById('fStudio').value;
@@ -628,6 +904,7 @@
     var job = document.getElementById('fJob').value;
     var bio = document.getElementById('fBio').value;
     var bday = document.getElementById('fBday').value;
+    var priv = document.getElementById('fPriv').checked;
     var age = '';
     if (bday){
       var d = new Date(bday + 'T00:00:00');
@@ -637,12 +914,16 @@
       age = a + ' · ';
     }
     document.getElementById('pvName').textContent = name;
+    document.getElementById('pvLock').textContent = priv ? '🔒' : '';
     document.getElementById('pvAvatar').textContent = name.charAt(0).toUpperCase();
     document.getElementById('pvMeta').textContent = age + job + ' · ' + loc;
     document.getElementById('pvStudio').textContent = '🏠 ' + studio;
     document.getElementById('pvBio').textContent = '"' + bio + '"';
     document.getElementById('pvTimes').textContent = 'Usually in class: ' +
       document.getElementById('fTimes').value.toLowerCase();
+    document.getElementById('pvPrivNote').textContent = priv
+      ? 'Private account — only approved followers see your posts. Birthday stays private; only age shows.'
+      : 'Public account — anyone at SWEAT440 can see your posts. Birthday stays private; only age shows.';
     var goals = document.querySelectorAll('#profile-edit .chip.mint');
     var gHtml = '';
     goals.forEach(function(g){ gHtml += '<span class="chip">' + g.textContent + '</span>'; });
@@ -650,4 +931,7 @@
     subTab('profile', 'view');
     toast('Profile saved ✓');
   }
+
+  renderMembers();
+  renderThreads();
 </script>
