@@ -34,7 +34,7 @@
     {
       "date": "2026-05-24",
       "type": "task",
-      "summary": "Ran first competitive sweep. Researched F45, OrangeTheory, Solidcore, and Barry's for the week of 2026-05-24. Key findings: OTF launching Season of Strength challenge (June 1–July 26, $35 registration); Solidcore expanded Core Collective wellness partnership program; Barry's hit 100 studios and launched LIFT strength-only modality; F45 sustaining 'This Is F45 Training' global campaign. All four competitors are converging on strength positioning and lifestyle ecosystem expansion. Three decision options surfaced for Matt's review.",
+      "summary": "Ran first competitive sweep. Researched F45, OrangeTheory, Solidcore, and Barry's for the week of 2026-05-24. Key findings: OTF launching Season of Strength challenge (June 1\u2013July 26, $35 registration); Solidcore expanded Core Collective wellness partnership program; Barry's hit 100 studios and launched LIFT strength-only modality; F45 sustaining 'This Is F45 Training' global campaign. All four competitors are converging on strength positioning and lifestyle ecosystem expansion. Three decision options surfaced for Matt's review.",
       "files_changed": [
         "agents/competitive/briefs/2026-05-24.md",
         "TODO.md",
@@ -55,13 +55,25 @@
     {
       "date": "2026-05-30",
       "type": "task",
-      "summary": "Vendored the SWEAT440 paid-ad-review skill into the repo and added the missing StoryBrand 2.0 reference. The skill's SKILL.md referenced references/storybrand-framework.md but the file did not exist in any copy, and the active installed copy had lost its references/ folder entirely. Wrote storybrand-framework.md (reader-as-hero rule, seven beats, pillar-to-internal-problem and pillar-to-transformation mappings, one-pillar enforcement, review checklist), repaired the installed copy and the downloadable .skill bundle, added a v2.0 version comment to SKILL.md, and committed the full skill source to skills/sweat440-paid-ad-review/ as the version-controlled source of truth. Verified by running the skill on a sample ad — StoryBrand checks fired correctly.",
+      "summary": "Vendored the SWEAT440 paid-ad-review skill into the repo and added the missing StoryBrand 2.0 reference. The skill's SKILL.md referenced references/storybrand-framework.md but the file did not exist in any copy, and the active installed copy had lost its references/ folder entirely. Wrote storybrand-framework.md (reader-as-hero rule, seven beats, pillar-to-internal-problem and pillar-to-transformation mappings, one-pillar enforcement, review checklist), repaired the installed copy and the downloadable .skill bundle, added a v2.0 version comment to SKILL.md, and committed the full skill source to skills/sweat440-paid-ad-review/ as the version-controlled source of truth. Verified by running the skill on a sample ad \u2014 StoryBrand checks fired correctly.",
       "files_changed": [
         "skills/sweat440-paid-ad-review/SKILL.md",
         "skills/sweat440-paid-ad-review/references/storybrand-framework.md",
         "skills/sweat440-paid-ad-review/references/pillars-and-personas.md",
         "skills/sweat440-paid-ad-review/references/standing-standards.md",
         "skills/sweat440-paid-ad-review/references/sop-framework.md",
+        "TODO.md",
+        "updates.json"
+      ]
+    },
+    {
+      "date": "2026-07-03",
+      "type": "task",
+      "summary": "Kicked off the SWEAT440 community app project. Wrote the project brief (three core loops: dating-app-style profiles + studio boards/events, studio WOD + in-home custom workouts, CRM-tied rewards with referrals as the flagship mechanic; retail/nutrition/matching explicitly out of scope for prototype). Built clickable prototype v1 as a self-contained HTML mobile mockup with working tab navigation, profile create/edit with home-studio dropdown, community board/members/events, WOD + in-home workout generator, rewards with referral code, and a stub AI concierge chat. Verified in browser preview (all interactions pass, no console errors) and published as a Claude artifact. Biggest open question: which CRM SWEAT440 uses and what its API exposes.",
+      "files_changed": [
+        "docs/projects/sweat440-app/brief.md",
+        "docs/projects/sweat440-app/prototype/v1.html",
+        ".claude/launch.json",
         "TODO.md",
         "updates.json"
       ]

@@ -1,0 +1,653 @@
+<meta charset="utf-8">
+<title>SWEAT440 App — Prototype v1</title>
+<style>
+  :root{
+    --blue:#00A3E0; --deep:#0084B5; --light:#99DAF3; --ice:#D2EFFF;
+    --volt:#DDFF00; --mint:#00FFC2;
+    --ink:#10181C; --sub:#4A5A63; --line:#C9E6F4; --bg:#FFFFFF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Open Sans','Segoe UI',-apple-system,Helvetica,Arial,sans-serif;
+    background:var(--ice); color:var(--ink);
+    min-height:100vh; display:flex; flex-direction:column; align-items:center;
+    padding:24px 12px 48px;
+  }
+  .head-note{max-width:390px;width:100%;margin-bottom:14px;text-align:center}
+  .head-note h1{
+    font-family:Oswald,'Arial Narrow','Helvetica Neue',sans-serif;
+    font-style:italic; text-transform:uppercase; font-weight:700;
+    font-size:22px; letter-spacing:.5px; color:var(--deep); text-wrap:balance;
+  }
+  .head-note p{font-size:12.5px;color:var(--sub);margin-top:4px}
+
+  /* ---------- phone frame ---------- */
+  .phone{
+    width:100%; max-width:390px; height:780px; background:var(--bg);
+    border-radius:28px; border:1px solid var(--line);
+    box-shadow:0 18px 50px rgba(0,132,181,.25);
+    display:flex; flex-direction:column; overflow:hidden; position:relative;
+  }
+  @media (max-height:900px){ .phone{height:min(780px,calc(100vh - 130px));min-height:560px} }
+
+  .appbar{
+    background:var(--blue); color:#fff; padding:14px 16px 12px;
+    display:flex; align-items:center; justify-content:space-between; flex:0 0 auto;
+  }
+  .logo{
+    font-family:Oswald,'Arial Narrow',sans-serif; font-style:italic; font-weight:700;
+    text-transform:uppercase; font-size:19px; letter-spacing:.5px;
+  }
+  .pts-chip{
+    background:var(--volt); color:var(--ink); font-weight:700; font-size:12.5px;
+    padding:4px 10px; border-radius:999px; font-variant-numeric:tabular-nums;
+  }
+  .screen{flex:1 1 auto; overflow-y:auto; padding:16px; display:none; scroll-behavior:smooth}
+  .screen.active{display:block}
+
+  /* ---------- tab bar ---------- */
+  .tabbar{
+    flex:0 0 auto; display:grid; grid-template-columns:repeat(5,1fr);
+    border-top:1px solid var(--line); background:#fff;
+  }
+  .tabbar button{
+    border:0; background:none; padding:9px 2px 11px; cursor:pointer;
+    font-family:inherit; font-size:10.5px; font-weight:600; color:var(--sub);
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+  }
+  .tabbar button svg{width:22px;height:22px;stroke:var(--sub);fill:none;stroke-width:1.8}
+  .tabbar button.on{color:var(--deep)}
+  .tabbar button.on svg{stroke:var(--blue)}
+  .tabbar button:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+    outline:2px solid var(--deep); outline-offset:2px;
+  }
+
+  /* ---------- shared bits ---------- */
+  h2.sec{
+    font-family:Oswald,'Arial Narrow',sans-serif; font-style:italic; font-weight:700;
+    text-transform:uppercase; font-size:17px; color:var(--deep);
+    letter-spacing:.4px; margin:2px 0 10px;
+  }
+  .card{
+    background:#fff; border:1px solid var(--line); border-radius:14px;
+    padding:14px; margin-bottom:12px;
+  }
+  .card.tint{background:var(--ice);border-color:var(--light)}
+  .btn{
+    display:inline-block; border:0; cursor:pointer; font-family:inherit;
+    font-weight:700; font-size:13.5px; border-radius:10px; padding:10px 16px;
+  }
+  .btn-volt{background:var(--volt); color:var(--ink)}
+  .btn-blue{background:var(--blue); color:#fff}
+  .btn-ghost{background:var(--ice); color:var(--deep)}
+  .btn-wide{width:100%; text-align:center}
+  .chip{
+    display:inline-block; font-size:11.5px; font-weight:600; color:var(--deep);
+    background:var(--ice); border:1px solid var(--light); border-radius:999px;
+    padding:3px 9px; margin:2px 3px 2px 0;
+  }
+  .chip.mint{background:var(--mint);border-color:var(--mint);color:var(--ink)}
+  .muted{color:var(--sub); font-size:12.5px}
+  .row{display:flex; align-items:center; gap:10px}
+  .grow{flex:1}
+  .avatar{
+    width:46px;height:46px;border-radius:50%;flex:0 0 auto;
+    background:var(--blue); color:#fff; display:flex;align-items:center;justify-content:center;
+    font-family:Oswald,'Arial Narrow',sans-serif;font-style:italic;font-weight:700;font-size:17px;
+  }
+  .avatar.alt{background:var(--deep)}
+  .avatar.big{width:72px;height:72px;font-size:26px}
+
+  /* segmented control */
+  .seg{display:flex; background:var(--ice); border-radius:10px; padding:3px; margin-bottom:14px; gap:3px}
+  .seg button{
+    flex:1; border:0; background:none; padding:8px 4px; border-radius:8px; cursor:pointer;
+    font-family:inherit; font-size:12.5px; font-weight:700; color:var(--sub);
+  }
+  .seg button.on{background:#fff; color:var(--deep); box-shadow:0 1px 3px rgba(0,132,181,.2)}
+
+  /* forms */
+  label.f{display:block; font-size:12px; font-weight:700; color:var(--deep); margin:12px 0 4px}
+  input.f,select.f,textarea.f{
+    width:100%; font-family:inherit; font-size:14px; color:var(--ink);
+    border:1px solid var(--line); border-radius:10px; padding:10px 12px; background:#fff;
+  }
+  textarea.f{resize:none}
+
+  /* workout stations */
+  .station{display:flex; gap:12px; padding:11px 0; border-bottom:1px solid var(--line)}
+  .station:last-child{border-bottom:0}
+  .st-num{
+    flex:0 0 auto; width:40px; height:40px; border-radius:10px; background:var(--blue); color:#fff;
+    font-family:Oswald,'Arial Narrow',sans-serif; font-style:italic; font-weight:700;
+    display:flex; align-items:center; justify-content:center; font-size:16px;
+  }
+  .st-num.alt{background:var(--deep)}
+  .station h4{font-size:13.5px; margin-bottom:2px}
+  .station .muted{font-size:12px}
+
+  /* toast */
+  #toast{
+    position:absolute; left:50%; bottom:84px; transform:translateX(-50%) translateY(20px);
+    background:var(--ink); color:#fff; font-size:13px; font-weight:600;
+    padding:10px 16px; border-radius:999px; opacity:0; pointer-events:none;
+    transition:opacity .25s, transform .25s; max-width:85%; text-align:center;
+  }
+  #toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+  #toast b{color:var(--volt)}
+  @media (prefers-reduced-motion:reduce){ #toast{transition:none} .screen{scroll-behavior:auto} }
+
+  /* welcome */
+  #scr-welcome{background:linear-gradient(170deg,var(--blue) 0%,var(--deep) 90%); color:#fff; display:none}
+  #scr-welcome.active{display:flex; flex-direction:column; justify-content:flex-end; padding:28px}
+  #scr-welcome .mega{
+    font-family:Oswald,'Arial Narrow',sans-serif; font-style:italic; font-weight:700;
+    text-transform:uppercase; font-size:40px; line-height:1.02; text-wrap:balance;
+  }
+  #scr-welcome .mega em{color:var(--volt); font-style:italic}
+  #scr-welcome p{margin:14px 0 22px; color:var(--ice); font-size:14px; max-width:32ch}
+
+  /* chat */
+  .chat-wrap{display:flex; flex-direction:column; gap:8px; padding-bottom:8px}
+  .bub{max-width:82%; padding:10px 13px; border-radius:14px; font-size:13.5px; line-height:1.45}
+  .bub.bot{background:var(--ice); color:var(--ink); border-bottom-left-radius:4px; align-self:flex-start}
+  .bub.me{background:var(--blue); color:#fff; border-bottom-right-radius:4px; align-self:flex-end}
+  .chat-input{display:flex; gap:8px; margin-top:10px}
+
+  .redeem-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  .redeem-grid .card{margin-bottom:0}
+  .price{font-weight:700; color:var(--deep); font-variant-numeric:tabular-nums}
+
+  .refcode{
+    font-family:Oswald,'Arial Narrow',sans-serif; font-style:italic; font-weight:700;
+    font-size:26px; letter-spacing:2px; color:var(--deep); text-align:center;
+    background:#fff; border:2px dashed var(--blue); border-radius:12px; padding:12px; margin:10px 0;
+  }
+  .earn-row{display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--line); font-size:13px}
+  .earn-row:last-child{border-bottom:0}
+  .earn-row b{font-variant-numeric:tabular-nums; color:var(--deep)}
+</style>
+
+<div class="head-note">
+  <h1>SWEAT440 Community App — Prototype v1</h1>
+  <p>Clickable mockup. Everything is fake data — tap through the tabs. Rewards points react to check-ins, RSVPs and referrals.</p>
+</div>
+
+<div class="phone">
+  <div class="appbar">
+    <div class="logo">SWEAT440</div>
+    <div class="pts-chip" id="ptsChip">⚡ 1,240 pts</div>
+  </div>
+
+  <!-- WELCOME -->
+  <div class="screen active" id="scr-welcome">
+    <div class="mega">Your gym.<br>Your crew.<br><em>No waiting.</em></div>
+    <p>Meet members at your studio, get today's workout, and earn rewards every time you check in or bring a friend.</p>
+    <button class="btn btn-volt btn-wide" onclick="go('profile');subTab('profile','edit')" style="margin-bottom:10px">Create my profile</button>
+    <button class="btn btn-wide" style="background:rgba(255,255,255,.16);color:#fff" onclick="go('community')">Explore as demo member</button>
+  </div>
+
+  <!-- COMMUNITY -->
+  <div class="screen" id="scr-community">
+    <h2 class="sec">Community — SWEAT440 Brickell</h2>
+    <div class="seg" id="seg-community">
+      <button class="on" onclick="subTab('community','board')">Board</button>
+      <button onclick="subTab('community','members')">Members</button>
+      <button onclick="subTab('community','events')">Events</button>
+    </div>
+
+    <div id="community-board">
+      <div class="card">
+        <div class="row">
+          <div class="avatar">DR</div>
+          <div class="grow"><b style="font-size:13.5px">Dani R.</b><div class="muted">Brickell · 2h ago</div></div>
+        </div>
+        <p style="font-size:13.5px;margin:9px 0">Hit a 200lb deadlift at station 3 today!! Six months ago I couldn't do 95. This place works 💪</p>
+        <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" onclick="toast('You cheered Dani 🎉')">🔥 Cheer · 12</button>
+      </div>
+      <div class="card">
+        <div class="row">
+          <div class="avatar alt">MK</div>
+          <div class="grow"><b style="font-size:13.5px">Marcus K.</b><div class="muted">Brickell · 5h ago</div></div>
+        </div>
+        <p style="font-size:13.5px;margin:9px 0">Anyone doing the 6:40am class tomorrow? Looking for a station partner who won't let me skip burpees.</p>
+        <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" onclick="toast('Reply sent to Marcus')">💬 I'm in</button>
+      </div>
+      <div class="card">
+        <div class="row">
+          <div class="avatar">SL</div>
+          <div class="grow"><b style="font-size:13.5px">Sofia L.</b><div class="muted">Brickell · 1d ago</div></div>
+        </div>
+        <p style="font-size:13.5px;margin:9px 0">New to Miami + new to SWEAT440. What should I eat before a 7pm class? 😅</p>
+        <button class="btn btn-ghost" style="padding:6px 12px;font-size:12px" onclick="toast('Reply posted · <b>+10 pts</b>',10)">💬 Reply · 4</button>
+      </div>
+      <button class="btn btn-blue btn-wide" onclick="toast('Post published · <b>+10 pts</b>',10)">+ New post</button>
+    </div>
+
+    <div id="community-members" style="display:none">
+      <div style="margin-bottom:10px">
+        <span class="muted" style="font-weight:700">Filter by goal:</span><br>
+        <button class="chip" onclick="filterMembers('all',this)" style="cursor:pointer">All</button><button class="chip" onclick="filterMembers('strength',this)" style="cursor:pointer">Strength</button><button class="chip" onclick="filterMembers('weight loss',this)" style="cursor:pointer">Weight loss</button><button class="chip" onclick="filterMembers('community',this)" style="cursor:pointer">Community</button>
+      </div>
+      <div id="memberList"></div>
+      <p class="muted" style="text-align:center;margin-top:4px">v1 uses simple filters — no matching algorithm.</p>
+    </div>
+
+    <div id="community-events" style="display:none">
+      <div class="card tint">
+        <b style="font-size:14px">☕ Post-class coffee crew</b>
+        <div class="muted" style="margin:4px 0 8px">Sat Jul 5 · 10:30am · Brickell · hosted by Dani R. · 8 going</div>
+        <button class="btn btn-volt" data-rsvp="0" onclick="rsvp(this)">RSVP</button>
+      </div>
+      <div class="card tint">
+        <b style="font-size:14px">🏃 Bayfront 5K run club</b>
+        <div class="muted" style="margin:4px 0 8px">Sun Jul 6 · 8:00am · Bayfront Park · 14 going</div>
+        <button class="btn btn-volt" data-rsvp="0" onclick="rsvp(this)">RSVP</button>
+      </div>
+      <div class="card tint">
+        <b style="font-size:14px">🎉 July member social</b>
+        <div class="muted" style="margin:4px 0 8px">Fri Jul 11 · 7:30pm · Brickell studio · 22 going</div>
+        <button class="btn btn-volt" data-rsvp="0" onclick="rsvp(this)">RSVP</button>
+      </div>
+      <button class="btn btn-blue btn-wide" onclick="toast('Event creation — coming in build phase')">+ Create an event</button>
+    </div>
+  </div>
+
+  <!-- WORKOUT -->
+  <div class="screen" id="scr-workout">
+    <h2 class="sec">Workout</h2>
+    <div class="seg" id="seg-workout">
+      <button class="on" onclick="subTab('workout','wod')">Studio WOD</button>
+      <button onclick="subTab('workout','home')">In-Home</button>
+    </div>
+
+    <div id="workout-wod">
+      <div class="card" style="background:var(--blue);border-color:var(--blue);color:#fff">
+        <div style="font-family:Oswald,'Arial Narrow',sans-serif;font-style:italic;font-weight:700;text-transform:uppercase;font-size:18px">Thu Jul 3 · Shred Thursday</div>
+        <div style="font-size:12.5px;color:var(--ice);margin-top:2px">SWEAT440 Brickell · 4 stations × 10 min · classes every 10 minutes</div>
+      </div>
+      <div class="card">
+        <div class="station">
+          <div class="st-num">1</div>
+          <div><h4>Sled push + battle ropes</h4><div class="muted">3 rounds · 440-second block</div></div>
+        </div>
+        <div class="station">
+          <div class="st-num alt">2</div>
+          <div><h4>DB thrusters + renegade rows</h4><div class="muted">45 on / 15 off</div></div>
+        </div>
+        <div class="station">
+          <div class="st-num">3</div>
+          <div><h4>Assault bike sprints</h4><div class="muted">30 on / 30 off · max effort</div></div>
+        </div>
+        <div class="station">
+          <div class="st-num alt">4</div>
+          <div><h4>Core finisher: plank series + V-ups</h4><div class="muted">40 on / 20 off</div></div>
+        </div>
+      </div>
+      <button class="btn btn-volt btn-wide" id="checkinBtn" onclick="checkin()">✓ Check in to class · +50 pts</button>
+      <p class="muted" style="text-align:center;margin-top:8px">Check-ins sync from the CRM in the real app.</p>
+    </div>
+
+    <div id="workout-home" style="display:none">
+      <div class="card tint">
+        <b style="font-size:14px">Build my at-home 440</b>
+        <p class="muted" style="margin-top:2px">Same 4-station DNA, wherever you are. AI-generated in the real app.</p>
+        <label class="f" for="eq">Equipment</label>
+        <select class="f" id="eq">
+          <option value="none">No equipment</option>
+          <option value="db">Dumbbells</option>
+          <option value="bands">Resistance bands</option>
+        </select>
+        <label class="f" for="mins">Time</label>
+        <select class="f" id="mins"><option>20 min</option><option selected>30 min</option><option>40 min</option></select>
+        <label class="f" for="focus">Focus</label>
+        <select class="f" id="focus">
+          <option value="full">Full body</option><option value="upper">Upper body</option>
+          <option value="lower">Lower body</option><option value="core">Core</option>
+        </select>
+        <div style="margin-top:14px"><button class="btn btn-blue btn-wide" onclick="genHome()">Generate my workout</button></div>
+      </div>
+      <div class="card" id="homePlan" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- REWARDS -->
+  <div class="screen" id="scr-rewards">
+    <h2 class="sec">Rewards</h2>
+    <div class="card" style="background:var(--deep);border-color:var(--deep);color:#fff;text-align:center">
+      <div style="font-size:12px;color:var(--ice);font-weight:700;letter-spacing:1px;text-transform:uppercase">Your balance</div>
+      <div id="ptsBig" style="font-family:Oswald,'Arial Narrow',sans-serif;font-style:italic;font-weight:700;font-size:42px;font-variant-numeric:tabular-nums">1,240</div>
+      <div style="font-size:12.5px;color:var(--mint);font-weight:700">Silver tier · 760 pts to Gold</div>
+    </div>
+
+    <div class="card tint">
+      <b style="font-size:15px">🤝 Bring a friend, both win</b>
+      <p class="muted" style="margin-top:3px">Your friend's first class is free. When they join, you get <b>500 pts</b> and they start with <b>250 pts</b>.</p>
+      <div class="refcode">MATT-440</div>
+      <button class="btn btn-volt btn-wide" onclick="toast('Invite link copied — send it to a friend! · <b>+25 pts</b>',25)">Invite a friend</button>
+      <p class="muted" style="text-align:center;margin-top:8px">Referral attribution runs through the CRM in the real app.</p>
+    </div>
+
+    <div class="card">
+      <b style="font-size:14px">How you earn</b>
+      <div style="margin-top:6px">
+        <div class="earn-row"><span>Friend joins with your code</span><b>+500</b></div>
+        <div class="earn-row"><span>Class check-in</span><b>+50</b></div>
+        <div class="earn-row"><span>Invite sent</span><b>+25</b></div>
+        <div class="earn-row"><span>Attend a community event</span><b>+25</b></div>
+        <div class="earn-row"><span>Post or reply on the board</span><b>+10</b></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <b style="font-size:14px">Redeem</b>
+      <div class="redeem-grid" style="margin-top:8px">
+        <div class="card tint"><b style="font-size:13px">🥤 Protein shake</b><div class="price">300 pts</div></div>
+        <div class="card tint"><b style="font-size:13px">🎟️ Guest pass</b><div class="price">400 pts</div></div>
+        <div class="card tint"><b style="font-size:13px">👕 SWEAT440 tee</b><div class="price">900 pts</div></div>
+        <div class="card tint"><b style="font-size:13px">💊 Supplements 20% off</b><div class="price">600 pts</div></div>
+      </div>
+      <p class="muted" style="margin-top:8px">Redeem at the front desk in v1 — no in-app store yet.</p>
+    </div>
+  </div>
+
+  <!-- COACH (AI) -->
+  <div class="screen" id="scr-coach">
+    <h2 class="sec">Coach 440</h2>
+    <div class="chat-wrap" id="chatWrap">
+      <div class="bub bot">Hey Matt! I can pull today's WOD, build you an at-home workout, or find you an event this week. What do you need?</div>
+    </div>
+    <div class="chat-input">
+      <input class="f" id="chatIn" placeholder="Ask Coach 440…" onkeydown="if(event.key==='Enter')sendChat()">
+      <button class="btn btn-blue" onclick="sendChat()">Send</button>
+    </div>
+    <p class="muted" style="margin-top:8px">Canned demo replies — Claude-powered in the real app.</p>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="screen" id="scr-profile">
+    <h2 class="sec">My profile</h2>
+    <div class="seg" id="seg-profile">
+      <button class="on" onclick="subTab('profile','view')">Preview</button>
+      <button onclick="subTab('profile','edit')">Edit</button>
+    </div>
+
+    <div id="profile-view">
+      <div class="card tint" style="text-align:center">
+        <div class="avatar big" style="margin:0 auto 8px" id="pvAvatar">M</div>
+        <div style="font-family:Oswald,'Arial Narrow',sans-serif;font-style:italic;font-weight:700;font-size:20px;text-transform:uppercase" id="pvName">Matt M.</div>
+        <div class="muted" id="pvMeta">34 · Marketing Director · Miami, FL</div>
+        <div style="margin:8px 0 4px"><span class="chip mint" id="pvStudio">🏠 SWEAT440 Brickell</span></div>
+        <div id="pvGoals"><span class="chip">Strength</span><span class="chip">Community</span></div>
+        <div class="muted" style="margin-top:8px" id="pvTimes">Usually in class: weekdays 6–7am</div>
+        <p style="font-size:13px;margin-top:8px" id="pvBio">"Here for the sled pushes and the people. Ask me about pre-workout coffee."</p>
+      </div>
+      <p class="muted" style="text-align:center">This is what other members see. Birthday stays private — only age shows.</p>
+    </div>
+
+    <div id="profile-edit" style="display:none">
+      <div class="card">
+        <label class="f" for="fName">Name</label>
+        <input class="f" id="fName" value="Matt M.">
+        <label class="f" for="fStudio">Home studio</label>
+        <select class="f" id="fStudio">
+          <option>SWEAT440 Brickell</option><option>SWEAT440 Miami Beach</option>
+          <option>SWEAT440 Midtown Miami</option><option>SWEAT440 Coral Gables</option>
+          <option>SWEAT440 Doral</option><option>SWEAT440 Kendall</option>
+          <option>SWEAT440 Aventura</option><option>SWEAT440 Fort Lauderdale</option>
+          <option>SWEAT440 Boca Raton</option><option>SWEAT440 Austin</option>
+          <option>SWEAT440 NYC — FiDi</option><option>SWEAT440 Montreal</option>
+        </select>
+        <label class="f" for="fLoc">Location</label>
+        <input class="f" id="fLoc" value="Miami, FL">
+        <label class="f" for="fBday">Birthday <span style="font-weight:400;color:var(--sub)">(private — used for age + birthday reward)</span></label>
+        <input class="f" id="fBday" type="date" value="1992-03-14">
+        <label class="f" for="fJob">Occupation</label>
+        <input class="f" id="fJob" value="Marketing Director">
+        <label class="f">Fitness goals</label>
+        <div>
+          <button class="chip" style="cursor:pointer" onclick="this.classList.toggle('mint')">Strength</button><button class="chip" style="cursor:pointer" onclick="this.classList.toggle('mint')">Weight loss</button><button class="chip" style="cursor:pointer" onclick="this.classList.toggle('mint')">Endurance</button><button class="chip mint" style="cursor:pointer" onclick="this.classList.toggle('mint')">Community</button><button class="chip" style="cursor:pointer" onclick="this.classList.toggle('mint')">Tone up</button>
+        </div>
+        <label class="f" for="fTimes">Usual class times</label>
+        <select class="f" id="fTimes">
+          <option>Weekdays 6–7am</option><option>Weekdays lunch</option>
+          <option>Weekdays evening</option><option>Weekends</option><option>It varies</option>
+        </select>
+        <label class="f" for="fBio">Short bio</label>
+        <textarea class="f" id="fBio" rows="2">Here for the sled pushes and the people. Ask me about pre-workout coffee.</textarea>
+        <div style="margin-top:14px"><button class="btn btn-volt btn-wide" onclick="saveProfile()">Save profile</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <div class="tabbar">
+    <button id="tab-community" class="on" onclick="go('community')">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><circle cx="16.5" cy="9.5" r="2.6"/><path d="M3.5 19c.6-3.2 2.9-5 5.5-5s4.9 1.8 5.5 5"/><path d="M15.5 14.6c2 .3 3.6 1.8 4 4.4"/></svg>
+      Community</button>
+    <button id="tab-workout" onclick="go('workout')">
+      <svg viewBox="0 0 24 24"><path d="M6.5 9v6M4 10.5v3M17.5 9v6M20 10.5v3M6.5 12h11"/></svg>
+      Workout</button>
+    <button id="tab-rewards" onclick="go('rewards')">
+      <svg viewBox="0 0 24 24"><path d="M12 3l2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5L4.8 8.3l5-.7z"/></svg>
+      Rewards</button>
+    <button id="tab-coach" onclick="go('coach')">
+      <svg viewBox="0 0 24 24"><path d="M4 6.5A2.5 2.5 0 016.5 4h11A2.5 2.5 0 0120 6.5v7a2.5 2.5 0 01-2.5 2.5H10l-4.5 4v-4h-1A2.5 2.5 0 014 13.5z"/></svg>
+      Coach</button>
+    <button id="tab-profile" onclick="go('profile')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-4 3.8-6 7-6s6.2 2 7 6"/></svg>
+      Profile</button>
+  </div>
+</div>
+
+<script>
+  var pts = 1240;
+  var checkedIn = false;
+
+  function fmt(n){ return n.toLocaleString('en-US'); }
+  function addPts(n){
+    pts += n;
+    document.getElementById('ptsChip').textContent = '⚡ ' + fmt(pts) + ' pts';
+    document.getElementById('ptsBig').textContent = fmt(pts);
+  }
+
+  var toastTimer;
+  function toast(html, bonus){
+    if (bonus) addPts(bonus);
+    var t = document.getElementById('toast');
+    t.innerHTML = html;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2400);
+  }
+
+  var screens = ['welcome','community','workout','rewards','coach','profile'];
+  function go(name){
+    screens.forEach(function(s){
+      document.getElementById('scr-' + s).classList.toggle('active', s === name);
+      var tab = document.getElementById('tab-' + s);
+      if (tab) tab.classList.toggle('on', s === name);
+    });
+  }
+
+  var subPanels = {
+    community: ['board','members','events'],
+    workout: ['wod','home'],
+    profile: ['view','edit']
+  };
+  function subTab(section, panel){
+    go(section);
+    subPanels[section].forEach(function(p, i){
+      document.getElementById(section + '-' + p).style.display = (p === panel) ? '' : 'none';
+      var seg = document.getElementById('seg-' + section);
+      if (seg) seg.children[i].classList.toggle('on', p === panel);
+    });
+  }
+
+  /* members */
+  var members = [
+    {init:'JT', name:'Jess T.', meta:'29 · Nurse · Brickell', goals:['strength','community'], times:'Weekday evenings'},
+    {init:'CB', name:'Carlos B.', meta:'41 · Realtor · Brickell', goals:['weight loss'], times:'Weekdays 6–7am'},
+    {init:'AN', name:'Aisha N.', meta:'33 · Software engineer · Midtown', goals:['strength'], times:'Weekends'},
+    {init:'TP', name:'Tom P.', meta:'36 · Chef · Brickell', goals:['weight loss','community'], times:'Weekdays lunch'},
+    {init:'LV', name:'Lucía V.', meta:'27 · Grad student · Coral Gables', goals:['community'], times:'Weekday evenings'}
+  ];
+  function renderMembers(filter){
+    var html = '';
+    members.forEach(function(m, i){
+      if (filter && filter !== 'all' && m.goals.indexOf(filter) === -1) return;
+      var chips = m.goals.map(function(g){
+        return '<span class="chip">' + g.charAt(0).toUpperCase() + g.slice(1) + '</span>';
+      }).join('');
+      html += '<div class="card"><div class="row">' +
+        '<div class="avatar' + (i % 2 ? ' alt' : '') + '">' + m.init + '</div>' +
+        '<div class="grow"><b style="font-size:13.5px">' + m.name + '</b>' +
+        '<div class="muted">' + m.meta + '</div>' +
+        '<div class="muted" style="font-size:11.5px">🕐 ' + m.times + '</div>' +
+        '<div style="margin-top:4px">' + chips + '</div></div>' +
+        '<button class="btn btn-ghost" style="padding:7px 12px;font-size:12px" onclick="toast(\'Wave sent to ' + m.name.replace(/'/g,'') + ' 👋\')">Say hi</button>' +
+        '</div></div>';
+    });
+    document.getElementById('memberList').innerHTML = html ||
+      '<p class="muted" style="text-align:center;padding:20px 0">No members match that filter yet.</p>';
+  }
+  function filterMembers(goal, el){
+    var chips = el.parentElement.querySelectorAll('.chip');
+    chips.forEach(function(c){ c.classList.remove('mint'); });
+    el.classList.add('mint');
+    renderMembers(goal);
+  }
+  renderMembers('all');
+
+  /* events */
+  function rsvp(btn){
+    if (btn.dataset.rsvp === '1'){
+      btn.dataset.rsvp = '0';
+      btn.textContent = 'RSVP';
+      btn.className = 'btn btn-volt';
+      toast('RSVP removed');
+    } else {
+      btn.dataset.rsvp = '1';
+      btn.textContent = "✓ You're going";
+      btn.className = 'btn btn-blue';
+      toast("You're going! · <b>+25 pts</b>", 25);
+    }
+  }
+
+  /* check-in */
+  function checkin(){
+    if (checkedIn){ toast('Already checked in today ✓'); return; }
+    checkedIn = true;
+    var b = document.getElementById('checkinBtn');
+    b.textContent = '✓ Checked in — 12-class streak!';
+    b.className = 'btn btn-blue btn-wide';
+    toast('Checked in at Brickell · <b>+50 pts</b>', 50);
+  }
+
+  /* in-home generator */
+  var plans = {
+    none: {
+      full:  ['Jump squats + reverse lunges','Push-up ladder + shoulder taps','Mountain climbers + high knees','Plank series + V-ups'],
+      upper: ['Push-up variations','Pike push-ups + tricep dips (chair)','Inchworms + shoulder taps','Superman holds + arm circles'],
+      lower: ['Jump squats + pulse squats','Alternating lunges + step-ups','Glute bridges + single-leg bridges','Wall sit + calf raise finisher'],
+      core:  ['Plank up-downs','Bicycle crunches + V-ups','Russian twists + hollow hold','Side plank series']
+    },
+    db: {
+      full:  ['DB thrusters + swings','Renegade rows + push-ups','Goblet squats + lunges','Weighted sit-ups + Russian twists'],
+      upper: ['DB bench press (floor) + flys','Bent-over rows + curls','Arnold press + lateral raises','Skull crushers + hammer curls'],
+      lower: ['Goblet squats + sumo squats','DB Romanian deadlifts','Weighted lunges + step-ups','Weighted calf raises + wall sit'],
+      core:  ['Weighted sit-ups','DB side bends + twists','Plank pull-throughs','Weighted leg raises']
+    },
+    bands: {
+      full:  ['Band squats + presses','Band rows + pull-aparts','Banded lateral walks + lunges','Band-resisted crunches'],
+      upper: ['Band chest press + flys','Band rows + face pulls','Band curls + tricep pressdowns','Band pull-aparts + Y-raises'],
+      lower: ['Band squats + kickbacks','Banded glute bridges','Lateral band walks','Banded hamstring curls'],
+      core:  ['Band-resisted crunches','Pallof presses','Banded dead bugs','Banded plank rows']
+    }
+  };
+  function genHome(){
+    var eq = document.getElementById('eq').value;
+    var mins = document.getElementById('mins').value;
+    var focus = document.getElementById('focus').value;
+    var focusLabel = document.getElementById('focus');
+    focusLabel = focusLabel.options[focusLabel.selectedIndex].text;
+    var per = Math.floor(parseInt(mins, 10) / 4);
+    var list = plans[eq][focus];
+    var html = '<div style="font-family:Oswald,\'Arial Narrow\',sans-serif;font-style:italic;font-weight:700;' +
+      'text-transform:uppercase;font-size:16px;color:var(--deep);margin-bottom:6px">Your at-home 440 · ' +
+      focusLabel + ' · ' + mins + '</div>';
+    list.forEach(function(x, i){
+      html += '<div class="station"><div class="st-num' + (i % 2 ? ' alt' : '') + '">' + (i + 1) + '</div>' +
+        '<div><h4>' + x + '</h4><div class="muted">' + per + ' min · 45 on / 15 off</div></div></div>';
+    });
+    html += '<div style="margin-top:10px"><button class="btn btn-volt btn-wide" onclick="toast(\'Workout logged · <b>+25 pts</b>\',25)">Mark complete · +25 pts</button></div>';
+    var el = document.getElementById('homePlan');
+    el.innerHTML = html;
+    el.style.display = '';
+    el.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+
+  /* chat */
+  function botReply(q){
+    q = q.toLowerCase();
+    if (q.indexOf('wod') > -1 || q.indexOf('today') > -1 || q.indexOf('workout') > -1)
+      return "Today at Brickell it's Shred Thursday: sled pushes, DB thrusters, assault bike sprints, and a core finisher — 4 stations, 10 minutes each. Want me to build an at-home version instead?";
+    if (q.indexOf('event') > -1 || q.indexOf('week') > -1)
+      return "Three things coming up: coffee crew Saturday 10:30am, Bayfront 5K Sunday 8am, and the July member social next Friday. The 5K matches your usual morning schedule — want me to RSVP you?";
+    if (q.indexOf('home') > -1)
+      return "Head to Workout → In-Home, pick your equipment and time, and I'll build you a 4-station session. With dumbbells and 30 minutes I'd suggest a full-body split.";
+    if (q.indexOf('point') > -1 || q.indexOf('reward') > -1 || q.indexOf('refer') > -1)
+      return "You're at " + fmt(pts) + " pts — " + Math.max(0, 2000 - pts) + " from Gold. Fastest way up: your code MATT-440 is worth 500 pts per friend who joins.";
+    return "In the real app I'd answer that with Claude. For the demo, try asking about today's WOD, events this week, or your points.";
+  }
+  function sendChat(){
+    var inp = document.getElementById('chatIn');
+    var q = inp.value.trim();
+    if (!q) return;
+    var wrap = document.getElementById('chatWrap');
+    var me = document.createElement('div');
+    me.className = 'bub me';
+    me.textContent = q;
+    wrap.appendChild(me);
+    inp.value = '';
+    setTimeout(function(){
+      var bot = document.createElement('div');
+      bot.className = 'bub bot';
+      bot.textContent = botReply(q);
+      wrap.appendChild(bot);
+      bot.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 450);
+  }
+
+  /* profile */
+  function saveProfile(){
+    var name = document.getElementById('fName').value || 'Member';
+    var studio = document.getElementById('fStudio').value;
+    var loc = document.getElementById('fLoc').value;
+    var job = document.getElementById('fJob').value;
+    var bio = document.getElementById('fBio').value;
+    var bday = document.getElementById('fBday').value;
+    var age = '';
+    if (bday){
+      var d = new Date(bday + 'T00:00:00');
+      var ref = new Date('2026-07-03T00:00:00');
+      var a = ref.getFullYear() - d.getFullYear();
+      if (ref.getMonth() < d.getMonth() || (ref.getMonth() === d.getMonth() && ref.getDate() < d.getDate())) a--;
+      age = a + ' · ';
+    }
+    document.getElementById('pvName').textContent = name;
+    document.getElementById('pvAvatar').textContent = name.charAt(0).toUpperCase();
+    document.getElementById('pvMeta').textContent = age + job + ' · ' + loc;
+    document.getElementById('pvStudio').textContent = '🏠 ' + studio;
+    document.getElementById('pvBio').textContent = '"' + bio + '"';
+    document.getElementById('pvTimes').textContent = 'Usually in class: ' +
+      document.getElementById('fTimes').value.toLowerCase();
+    var goals = document.querySelectorAll('#profile-edit .chip.mint');
+    var gHtml = '';
+    goals.forEach(function(g){ gHtml += '<span class="chip">' + g.textContent + '</span>'; });
+    document.getElementById('pvGoals').innerHTML = gHtml || '<span class="chip">Community</span>';
+    subTab('profile', 'view');
+    toast('Profile saved ✓');
+  }
+</script>
